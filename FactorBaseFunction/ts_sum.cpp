@@ -55,3 +55,7 @@ Rcpp::NumericVector ts_sum(
     }
     return ret;
 }
+
+// library("Rcpp")
+// sourceCpp(file="ts_sum.cpp")
+// print(ts_sum(1:5, 3, 1:1, least=2, partial=TRUE))
