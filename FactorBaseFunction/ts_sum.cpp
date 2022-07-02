@@ -38,14 +38,18 @@ Rcpp::NumericVector ts_sum(
     for (int i = window - 1; i < x_size; i++) {
         ret[i] = 0.0;
         for (int j = i; j > i - window; j--) {
-            ret[i] += x[j];
+            if (sign == 0)  ret[i] += x[j];
+            else if (sign == -1 and x[j] < 0)   ret[i] += x[j];
+            else if (sign == 1 and x[j] > 0)    ret[i] += x[j];
         }
     }
     if (partial == true) {
         for (int i = window - least; i < window - 1; i++) {
             ret[i] = 0.0;
             for (int j = i; j >= i - least + 1; j--) {
-                ret[i] += x[j];
+                if (sign == 0)  ret[i] += x[j];
+                else if (sign == -1 and x[j] < 0)   ret[i] += x[j];
+                else if (sign == 1 and x[j] > 0)    ret[i] += x[j];
             }
         }
     }
