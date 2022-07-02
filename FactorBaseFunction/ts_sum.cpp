@@ -32,12 +32,21 @@ Rcpp::NumericVector ts_sum(
         return x;
     if (window <= 0)
         throw std::range_error("window must be a positive integer");
+    
     Rcpp::NumericVector ret(x_size, fill);
-
+    
     for (int i = window - 1; i < x_size; i++) {
         ret[i] = 0.0;
         for (int j = i; j > i - window; j--) {
             ret[i] += x[j];
+        }
+    }
+    if (partial == true) {
+        for (int i = window - least; i < window - 1; i++) {
+            ret[i] = 0.0;
+            for (int j = i; j >= i - least + 1; j--) {
+                ret[i] += x[j];
+            }
         }
     }
     return ret;
