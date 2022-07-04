@@ -1,6 +1,6 @@
 #include <Rcpp.h>
 #include <bits/stdc++.h>
-#include <queue>
+#include <set>
 #include <vector>
 
 bool lesser(double a, double b)
@@ -22,11 +22,18 @@ Rcpp::NumericVector ts_median(
 
     Rcpp::NumericVector ret(x_size, fill);
 
-    // std::priority_queue<double, std::vector<double>, std::greater<double>> pq;
 
-    for (int i = window - 1; i < x_size; i++) {
-        std::priority_queue<double, std::vector<double>, std::greater<double>> minheap;
-        std::priority_queue<double, std::vector<double>, lesser<double>> maxheap;
+    // for (int i = window - 1; i < x_size; i++) {
+    //     std::multiset<double, std::vector<double>, std::greater<double>> minheap;
+    //     std::multiset<double, std::vector<double>, lesser<double>> maxheap;
+    //     for (int j = i)
+    // }
+    std:multiset<double> min_set;
+    std:multiset<double> max_set;
+    for (int i = 0; i < x_size; i++) {
+        if (partial == true and i <= lesat - 1) {
+            
+        }
     }
 
     return ret;
@@ -35,3 +42,5 @@ Rcpp::NumericVector ts_median(
 // library("Rcpp")
 // sourceCpp(file="ts_median.cpp")
 // print(ts_median(1:5, 3))
+
+
