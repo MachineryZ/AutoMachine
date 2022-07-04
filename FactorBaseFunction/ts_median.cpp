@@ -48,7 +48,7 @@ Rcpp::NumericVector ts_median(
             }
 
             if (window % 2 == 0) {
-                ret[i] = (*(--min_set.end()) + *(max_set.begin()))/2;
+                ret[i] = double((*(--min_set.end()) + *(max_set.begin())))/2;
             }
             else if (window % 2 == 1) {
                 ret[i] = min_set.size() > max_set.size() ? *(--min_set.end()) : *(max_set.begin());
@@ -62,15 +62,15 @@ Rcpp::NumericVector ts_median(
                 max_set.erase(x[i - window + 1]);
         }
         if (min_set.size() == max_set.size() + 2) {
-                double max_min = *(--min_set.end());
-                min_set.erase(--min_set.end());
-                max_set.insert(max_min);
-            }
-            else if(min_set.size() == max_set.size() - 2) {
-                double max_min = *(max_set.begin());
-                max_set.erase(max_set.begin());
-                min_set.insert(max_min);
-            }
+            double max_min = *(--min_set.end());
+            min_set.erase(--min_set.end());
+            max_set.insert(max_min);
+        }
+        else if(min_set.size() == max_set.size() - 2) {
+            double max_min = *(max_set.begin());
+            max_set.erase(max_set.begin());
+            min_set.insert(max_min);
+        }
     }
     return ret;
 }
