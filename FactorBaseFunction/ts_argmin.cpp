@@ -23,7 +23,7 @@ Rcpp::NumericVector ts_argmin(
         ret[i] = 0;
         for (int j = i; j > i - window; j--) {
             if (x[j] < x[i - window + 1 + ret[i]])
-                ret[i] = j - i;
+                ret[i] = j - i + window - 1;
         }
     }
 
@@ -32,7 +32,7 @@ Rcpp::NumericVector ts_argmin(
             ret[i] = i;
             for (int j = i; j > i - window; j--) {
                 if (x[j] < x[i - window + 1 + ret[i]])
-                    ret[i] = j - i;
+                    ret[i] = j - i + window - 1;
             }
         }
     }
@@ -40,4 +40,4 @@ Rcpp::NumericVector ts_argmin(
 }
 // library("Rcpp")
 // sourceCpp(file="ts_argmin.cpp")
-// print(ts_argmax(1:5, 3))
+// print(ts_argmin(1:5, 3))
