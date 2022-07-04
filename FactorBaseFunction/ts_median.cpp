@@ -22,20 +22,56 @@ Rcpp::NumericVector ts_median(
 
     Rcpp::NumericVector ret(x_size, fill);
 
-
-    // for (int i = window - 1; i < x_size; i++) {
-    //     std::multiset<double, std::vector<double>, std::greater<double>> minheap;
-    //     std::multiset<double, std::vector<double>, lesser<double>> maxheap;
-    //     for (int j = i)
-    // }
-    std:multiset<double> min_set;
-    std:multiset<double> max_set;
+    std::multiset<double> min_set;
+    std::multiset<double> max_set;
     for (int i = 0; i < x_size; i++) {
-        if (partial == true and i <= lesat - 1) {
-            
-        }
-    }
+        if (i <= least - 1)
+            continue;
+        if (partial == false) {
+            // insert x[i]
+            if (x[i] < *(max_set.begin()))
+                min_set.insert(x[i]);
+            else {
+                max_set.insert(x[i]);
+            }
 
+            // check size
+            if (min_set.size() == max_set.size() + 2) {
+                double max_min = *(--min_set.end());
+                min_set.erase(--min_set.end());
+                max_set.insert(max_min);
+            }
+            else if(min_set.size() == max_set.size() - 2) {
+                double max_min = *(max_set.begin());
+                max_set.erase(max_set.begin());
+                min_set.insert(max_min);
+            }
+
+            if (window % 2 == 0) {
+                ret[i] = (*(--min_set.end()) + *(max_set.begin()))/2;
+            }
+            else if (window % 2 == 1) {
+                ret[i] = min_set.size() > max_set.size() ? *(--min_set.end()) : *(max_set.begin());
+            }
+        }
+        if (i >= window) {
+            // erase x[i - least + 1]
+            if (x[i - window + 1] < *(--min_set.end()))
+                min_set.erase(x[i - window + 1]);
+            else
+                max_set.erase(x[i - window + 1]);
+        }
+        if (min_set.size() == max_set.size() + 2) {
+                double max_min = *(--min_set.end());
+                min_set.erase(--min_set.end());
+                max_set.insert(max_min);
+            }
+            else if(min_set.size() == max_set.size() - 2) {
+                double max_min = *(max_set.begin());
+                max_set.erase(max_set.begin());
+                min_set.insert(max_min);
+            }
+    }
     return ret;
 }
 
