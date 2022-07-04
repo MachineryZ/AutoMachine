@@ -4,7 +4,7 @@
 Rcpp::NumericVector ts_argmin(
     const Rcpp::NumericVector& x,
     const int window,
-    const int partial = false,
+    const bool partial = false,
     const int least = 1,
     const double fill = NA_REAL
 ) {
