@@ -20,24 +20,24 @@ Rcpp::NumericVector ts_argmax(
     Rcpp::NumericVector ret(x_size, fill);
 
     for (int i = window - 1; i < x_size; i++) {
-        ret[i] = i;
+        ret[i] = 0;
         for (int j = i; j > i - window; j--) {
-            if (x[j] > x[ret[i]])
-                ret[i] = j;
+            if (x[j] > x[i - window + 1 + ret[i]])
+                ret[i] = j - i;
         }
     }
 
     if (partial == true) {
         for (int i = least - 1; i < window - 1; i++) {
-            ret[i] = i;
+            ret[i] = 0;
             for (int j = i; j > i - window; j--) {
-                if (x[j] > x[ret[i]])
-                    ret[i] = j;
+                if (x[j] > x[i - window + 1 + ret[i]])
+                    ret[i] = j - i;
             }
         }
     }
     return ret;
 }
 // library("Rcpp")
-// sourceCpp(file="ts_sum.cpp")
+// sourceCpp(file="ts_argmax.cpp")
 // print(ts_argmax(1:5, 3)

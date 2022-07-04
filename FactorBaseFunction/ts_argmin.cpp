@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 
 //[[Rcpp::export]]
-Rcpp::NumericVector ts_argmax(
+Rcpp::NumericVector ts_argmin(
     const Rcpp::NumericVector& x,
     const int window,
     const int partial = false,
@@ -20,10 +20,10 @@ Rcpp::NumericVector ts_argmax(
     Rcpp::NumericVector ret(x_size, fill);
 
     for (int i = window - 1; i < x_size; i++) {
-        ret[i] = i;
+        ret[i] = 0;
         for (int j = i; j > i - window; j--) {
-            if (x[j] < x[ret[i]])
-                ret[i] = j;
+            if (x[j] < x[i - window + 1 + ret[i]])
+                ret[i] = j - i;
         }
     }
 
@@ -31,8 +31,8 @@ Rcpp::NumericVector ts_argmax(
         for (int i = least - 1; i < window - 1; i++) {
             ret[i] = i;
             for (int j = i; j > i - window; j--) {
-                if (x[j] < x[ret[i]])
-                    ret[i] = j;
+                if (x[j] < x[i - window + 1 + ret[i]])
+                    ret[i] = j - i;
             }
         }
     }
@@ -40,4 +40,4 @@ Rcpp::NumericVector ts_argmax(
 }
 // library("Rcpp")
 // sourceCpp(file="ts_argmin.cpp")
-// print(ts_argmax(1:5, 3)
+// print(ts_argmax(1:5, 3))
