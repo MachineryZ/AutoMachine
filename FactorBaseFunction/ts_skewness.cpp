@@ -2,7 +2,7 @@
 
 //[[Rcpp::export]]
 Rcpp::NumericVector ts_skewness(
-    Rcpp::NumericVector& x,
+    const Rcpp::NumericVector& x,
     const int window,
     const bool partial = false,
     const int least = 0,
