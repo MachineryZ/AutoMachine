@@ -2,7 +2,7 @@
 #include <cmath>
 
 //[[Rcpp::export]]
-Rcpp::NumericVector ts_std(
+Rcpp::NumericVector ts_stddev(
     const Rcpp::NumericVector& x,
     const int window,
     const int least = 0,
