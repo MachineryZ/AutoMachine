@@ -30,17 +30,17 @@ Rcpp::NumericVector ts_stddev(
         ret[i] = std::sqrt(ret[i] / (window - 1));
     }
     if (partial == true) {
-        for (int i = window - 1; i < x_size; i++) {
+        for (int i = least - 1; i < window - 1; i++) {
             double mean = 0.0;
             ret[i] = 0.0;
-            for (int j = i; j > i - least; j--) {
+            for (int j = i; j >= 0; j--) {
                 mean += x[j];
             }
             mean = mean / window;
-            for (int j = i; j > i - least; j--) {
+            for (int j = i; j >= 0; j--) {
                 ret[i] += (x[j] - mean) * (x[j] - mean);
             }
-            ret[i] = std::sqrt(ret[i] / (window - 1));
+            ret[i] = std::sqrt(ret[i] / i);
         }
     }
     return ret;

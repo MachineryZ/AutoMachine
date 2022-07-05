@@ -30,7 +30,7 @@ Rcpp::NumericVector ts_argmin(
     if (partial == true) {
         for (int i = least - 1; i < window - 1; i++) {
             ret[i] = i;
-            for (int j = i; j > i - window; j--) {
+            for (int j = i; j >= 0; j--) {
                 if (x[j] < x[i - window + 1 + ret[i]])
                     ret[i] = j - i + window - 1;
             }

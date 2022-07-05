@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 
 //[[Rcpp::export]]
-Rcpp::NumericVector ts_skewness(
+Rcpp::NumericVector ts_kurtosis(
     Rcpp::NumericVector& x,
     const int window,
     const bool partial = false,
@@ -26,10 +26,10 @@ Rcpp::NumericVector ts_skewness(
         mean_x /= window;
         for (int j = i; j > i - window; j--) {
             sigma_x += (mean_x - x[j]) * (mean_x - x[j]);
-            k_x += (x[j] - mean_x) * (x[j] - mean_x) * (x[j] - mean_x);
+            k_x += (x[j] - mean_x) * (x[j] - mean_x) * (x[j] - mean_x) * (x[j] - mean_x);
         }
         sigma_x = std::sqrt(sigma_x/(window - 1));
-        ret[i] = k_x / sigma_x / sigma_x / sigma_x / window;
+        ret[i] = k_x / sigma_x / sigma_x / sigma_x / sigma_x / window;
     }
 
     if (partial == true) {
@@ -43,10 +43,10 @@ Rcpp::NumericVector ts_skewness(
             mean_x /= least;
             for (int j = i; j > i - window; j--) {
                 sigma_x += (x[j] - mean_x) * (x[j] - mean_x);
-                k_x += (x[j] - mean_x) * (x[j] - mean_x) * (x[j] - mean_x);
+                k_x += (x[j] - mean_x) * (x[j] - mean_x) * (x[j] - mean_x) * (x[j] - mean_x);
             }
             sigma_x = std::sqrt(sigma_x / (i - 1));
-            ret[i] = k_x / sigma_x / sigma_x / sigma_x / i;
+            ret[i] = k_x / sigma_x / sigma_x / sigma_x / sigma_x / i;
         }
     }
     return ret;
