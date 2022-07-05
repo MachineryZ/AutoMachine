@@ -6,7 +6,7 @@ Rcpp::NumericVector ts_cov(
     const Rcpp::NumericVector& y,
     const int window,
     const bool partial = false,
-    const bool least = 1,
+    const int least = 1,
     const double fill = NA_REAL
 ) {
     int x_size = x.size();

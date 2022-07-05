@@ -31,8 +31,8 @@ Rcpp::NumericVector ts_argmax(
         for (int i = least - 1; i < window - 1; i++) {
             ret[i] = 0;
             for (int j = i; j >= 0; j--) {
-                if (x[j] > x[i - window + 1 + ret[i]])
-                    ret[i] = j - i + window - 1;
+                if (x[j] > x[ret[i]])
+                    ret[i] = j;
             }
         }
     }
@@ -40,4 +40,4 @@ Rcpp::NumericVector ts_argmax(
 }
 // library("Rcpp")
 // sourceCpp(file="ts_argmax.cpp")
-// print(ts_argmax(1:5, 3))
+// print(ts_argmax(c(1,5,4,3,5,4,10,2,2,2,1,1), 3, TRUE, 1))
