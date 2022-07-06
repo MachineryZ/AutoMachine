@@ -31,7 +31,7 @@ Rcpp:: NumericVector ts_ema(
     if (partial == true) {
         for (int i = window - least; i < window - 1; i++) {
             ret[i] = 0.0;
-            for (int j = i - least + 1; j <= i; j++) {
+            for (int j = 0; j <= i; j++) {
                 ret[i] *= beta;
                 if(sign == 0)    ret[i] += x[j];
                 else if(sign == -1 and x[j] < 0)    ret[i] += x[j];

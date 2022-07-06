@@ -4,7 +4,7 @@
 Rcpp::NumericVector ts_max(
     const Rcpp::NumericVector& x,
     const int window,
-    const int partial = false,
+    const bool partial = false,
     const int least = 0,
     const double fill = NA_REAL
 ) {
@@ -33,7 +33,7 @@ Rcpp::NumericVector ts_max(
     if (partial == true) {
         for (int i = least - 1; i < window - 1; i++) {
             ret[i] = DBL_MIN;
-            for (int j = i; j >= i - least + 1; j--) {
+            for (int j = i; j >= 0; j--) {
                 ret[i] = std::max(ret[i], x[j]);
             }
         }

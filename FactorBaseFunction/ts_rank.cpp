@@ -54,7 +54,7 @@ Rcpp::NumericVector ts_rank(
             int greater = 0;
             int equal = 0;
             int lesser = 0;
-            for (int j = i; j > i - window; j--) {
+            for (int j = i; j >= 0; j--) {
                 if (x[j] == x[i])
                     equal++;
                 else if (x[j] > x[i])

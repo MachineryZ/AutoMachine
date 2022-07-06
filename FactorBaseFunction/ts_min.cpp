@@ -4,7 +4,7 @@
 Rcpp::NumericVector ts_min(
     const Rcpp::NumericVector& x,
     const int window,
-    const int partial = false,
+    const bool partial = false,
     const int least = 0,
     const double fill = NA_REAL
 ) {
@@ -33,7 +33,7 @@ Rcpp::NumericVector ts_min(
     if (partial == true) {
         for (int i = least - 1; i < window - 1; i++) {
             ret[i] = DBL_MAX;
-            for (int j = i; j >= i - least + 1; j--) {
+            for (int j = i; j >= 0; j--) {
                 ret[i] = std::min(ret[i], x[j]);
             }
         }

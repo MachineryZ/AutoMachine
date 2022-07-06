@@ -22,17 +22,17 @@ Rcpp::NumericVector ts_argmin(
     for (int i = window - 1; i < x_size; i++) {
         ret[i] = 0;
         for (int j = i; j > i - window; j--) {
-            if (x[j] < x[i - window + 1 + ret[i]])
+            if (x[j] <= x[i - window + 1 + ret[i]])
                 ret[i] = j - i + window - 1;
         }
     }
 
     if (partial == true) {
         for (int i = least - 1; i < window - 1; i++) {
-            ret[i] = i;
-            for (int j = i; j > i - window; j--) {
-                if (x[j] < x[i - window + 1 + ret[i]])
-                    ret[i] = j - i + window - 1;
+            ret[i] = 0;
+            for (int j = i; j >= 0; j--) {
+                if (x[j] <= x[ret[i]])
+                    ret[i] = j;
             }
         }
     }

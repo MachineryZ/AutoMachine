@@ -46,7 +46,7 @@ Rcpp::NumericVector ts_sum(
     if (partial == true) {
         for (int i = least - 1; i < window - 1; i++) {
             ret[i] = 0.0;
-            for (int j = i; j >= i - least + 1; j--) {
+            for (int j = i; j >= 01; j--) {
                 if (sign == 0)  ret[i] += x[j];
                 else if (sign == -1 and x[j] < 0)   ret[i] += x[j];
                 else if (sign == 1 and x[j] > 0)    ret[i] += x[j];
