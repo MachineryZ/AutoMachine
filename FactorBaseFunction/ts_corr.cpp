@@ -20,55 +20,37 @@ Rcpp::NumericVector ts_corr(
 
     Rcpp::NumericVector ret(x_size, fill);
 
-    for (int i = window - 1; i < x_size; i++) {
-        double mean_x = 0.0;
-        double mean_y = 0.0;
-        double sigma_x = 0.0;
-        double sigma_y = 0.0;
-        double rho = 0.0;
-        for (int j = i; j > i - window; j--) {
-            mean_x += x[j];
-            mean_y += y[j];
+    double sum_x = 0.0;
+    double sum_y = 0.0;
+    double square_sum_x = 0.0;
+    double square_sum_y = 0.0;
+    double cross_xy = 0.0;
+
+    for (int i = 0; i < x_size; i++) {
+        sum_x += x[i];
+        sum_y += y[i];
+        square_sum_x += x[i] * x[i];
+        square_sum_y += y[i] * y[i];
+        cross_xy += x[i] * y[i];
+        if (partial == true and i >= least - 1) {
+            ret[i] = (cross_xy - sum_x / (i + 1) * sum_y - sum_y / (i + 1) * sum_x + sum_x * sum_y / (i + 1)) / 
+                    std::sqrt(square_sum_x - 2 * sum_x / (i + 1) * sum_x + sum_x * sum_x / (i + 1)) / 
+                    std::sqrt(square_sum_y - 2 * sum_y / (i + 1) * sum_y + sum_y * sum_y / (i + 1));
         }
-        mean_x /= window;
-        mean_y /= window;
-        for (int j = i; j > i - window; j--) {
-            sigma_x += (mean_x - x[j]) * (mean_x - x[j]);
-            sigma_y += (mean_y - y[j]) * (mean_y - y[j]);
+        else if (i >= window - 1) {
+            if (i >= window) {
+                sum_x -= x[i - window];
+                sum_y -= y[i - window];
+                square_sum_x -= x[i - window] * x[i - window];
+                square_sum_y -= y[i - window] * y[i - window];
+                cross_xy -= x[i - window] * y[i - window];
+                }
+            ret[i] = (cross_xy - sum_x / window * sum_y - sum_y / window * sum_x + sum_x * sum_y / window) / 
+                    std::sqrt(square_sum_x - 2 * sum_x / window * sum_x + sum_x * sum_x / window) / 
+                    std::sqrt(square_sum_y - 2 * sum_y / window * sum_y + sum_y * sum_y / window);
         }
-        sigma_x = std::sqrt(sigma_x);
-        sigma_y = std::sqrt(sigma_y);
-        for (int j = i; j > i - window; j--) {
-            rho += (x[j] - mean_x) * (y[j] - mean_y);
-        }
-        ret[i] = rho / sigma_x / sigma_y;
     }
 
-    if (partial == true) {
-        for (int i = least - 1; i < window - 1; i++) {
-            double mean_x = 0.0;
-            double mean_y = 0.0;
-            double sigma_x = 0.0;
-            double sigma_y = 0.0;
-            double rho = 0.0;
-            for (int j = i; j >= 0; j--) {
-                mean_x += x[j];
-                mean_y += y[j];
-            }
-            mean_x /= i + 1;
-            mean_y /= i + 1;
-            for (int j = i; j > i - window; j--) {
-                sigma_x += (mean_x - x[j]) * (mean_x - x[j]);
-                sigma_y += (mean_y - y[j]) * (mean_y - y[j]);
-            }
-            sigma_x = std::sqrt(sigma_x);
-            sigma_y = std::sqrt(sigma_y);
-            for (int j = i; j > i - window; j--) {
-                rho += (x[j] - mean_x) * (y[j] - mean_y);
-            }
-            ret[i] = rho / sigma_x / sigma_y;
-        }
-    }
     return ret;
 }
 // library("Rcpp")
