@@ -33,7 +33,7 @@ Rcpp::NumericVector ts_corr(
         square_sum_y += y[i] * y[i];
         cross_xy += x[i] * y[i];
         if (partial == true and i >= least - 1) {
-            ret[i] = (cross_xy - sum_x / (i + 1) * sum_y - sum_y / (i + 1) * sum_x + sum_x * sum_y / (i + 1)) / 
+            ret[i] = (cross_xy - sum_x / (i + 1) * sum_y) / 
                     std::sqrt(square_sum_x - 2 * sum_x / (i + 1) * sum_x + sum_x * sum_x / (i + 1)) / 
                     std::sqrt(square_sum_y - 2 * sum_y / (i + 1) * sum_y + sum_y * sum_y / (i + 1));
         }
@@ -45,7 +45,7 @@ Rcpp::NumericVector ts_corr(
                 square_sum_y -= y[i - window] * y[i - window];
                 cross_xy -= x[i - window] * y[i - window];
                 }
-            ret[i] = (cross_xy - sum_x / window * sum_y - sum_y / window * sum_x + sum_x * sum_y / window) / 
+            ret[i] = (cross_xy - sum_x / window * sum_y) / 
                     std::sqrt(square_sum_x - 2 * sum_x / window * sum_x + sum_x * sum_x / window) / 
                     std::sqrt(square_sum_y - 2 * sum_y / window * sum_y + sum_y * sum_y / window);
         }
