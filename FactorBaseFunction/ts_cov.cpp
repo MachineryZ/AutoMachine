@@ -29,46 +29,20 @@ Rcpp::NumericVector ts_cov(
         sum_y += y[i];
         cross_xy += x[i] * y[i];
         if (partial == true and i >= least - 1) {
-            ret[i] = cross_xy - sum_x / (i + 1) * sum_y;
+            ret[i] = cross_xy / i - sum_x * sum_y / (i + 1) / i;
+        }
+        else if (i >= window - 1) {
+            if (i >= window) {
+                sum_x -= x[i - window];
+                sum_y -= y[i - window];
+                cross_xy -= x[i - window] * y[i - window];
+            }
+            ret[i] = cross_xy / (window - 1) - sum_x / window * sum_y / (window - 1);
         }
     }
-
-    // for (int i = window - 1; i < x_size; i++) {
-    //     ret[i] = 0.0;
-    //     double mean_x = 0.0;
-    //     double mean_y = 0.0;
-    //     for (int j = i; j > i - window; j--) {
-    //         mean_x += x[j];
-    //         mean_y += y[j];
-    //     }
-    //     mean_x /= window;
-    //     mean_y /= window;
-    //     for (int j = i; j > i - window; j--) {
-    //         ret[i] += (x[j] - mean_x) * (y[j] - mean_y);
-    //     }
-    //     ret[i] /= (window - 1);
-    // }
-
-    // if (partial == true) {
-    //     for (int i = least - 1; i < window - 1; i++) {
-    //         ret[i] = 0.0;
-    //         double mean_x = 0.0;
-    //         double mean_y = 0.0;
-    //         for (int j = i; j >= 0; j--) {
-    //             mean_x += x[j];
-    //             mean_y += y[j];
-    //         }
-    //         mean_x /= i + 1;
-    //         mean_y /= i + 1;
-    //         for (int j = i; j > i - least; j--) {
-    //             ret[i] += (x[j] - mean_x) * (y[j] - mean_y);
-    //         }
-    //         ret[i] /= (window - 1);
-    //     }
-    // }
-    // return ret;
+    return ret;
 }
 
 // library("Rcpp")
 // sourceCpp(file="ts_cov.cpp")
-// print(ts_cov(c(1,2,3,5,4), c(1,2,3,4,5), 3))
+// print(ts_cov(c(1,2,3,5,4), c(5,4,3,2,1), 3))
