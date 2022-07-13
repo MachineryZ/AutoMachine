@@ -35,23 +35,13 @@ Rcpp::NumericVector ts_sum(
     
     Rcpp::NumericVector ret(x_size, fill);
     
-    for (int i = window - 1; i < x_size; i++) {
-        ret[i] = 0.0;
-        for (int j = i; j > i - window; j--) {
-            if (sign == 0)  ret[i] += x[j];
-            else if (sign == -1 and x[j] < 0)   ret[i] += x[j];
-            else if (sign == 1 and x[j] > 0)    ret[i] += x[j];
-        }
-    }
-    if (partial == true) {
-        for (int i = least - 1; i < window - 1; i++) {
-            ret[i] = 0.0;
-            for (int j = i; j >= 01; j--) {
-                if (sign == 0)  ret[i] += x[j];
-                else if (sign == -1 and x[j] < 0)   ret[i] += x[j];
-                else if (sign == 1 and x[j] > 0)    ret[i] += x[j];
-            }
-        }
+    double sum = 0.0;
+    for (int i = 0; i < x_size; i++) {
+        sum += x[i];
+        if (i > window - 1)
+            sum -= x[i - window];
+        if ((partial == true and i >= least - 1) or i >= window - 1)
+            ret[i] = sum;
     }
     return ret;
 }
