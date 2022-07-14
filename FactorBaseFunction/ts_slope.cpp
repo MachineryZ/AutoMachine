@@ -8,8 +8,9 @@ Rcpp::NumericVector ts_slope(
     const int least = 0,
     const double fill = NA_REAL
 ) {
-    // w = (xi - mean_x) * (yi - mean_y) / (x_i - mean_x)**2
-    // b = mean_y - w mean_x
+    // w = sum(xi - mean_x) * (i - mean_i) / (i - mean_i)**2
+    // b = mean_x - w mean_i
+    // w = (sum_x * sum_i - sum_x * sum_i / n) / (i - mean_i)
     int x_size = x.size();
     if (x_size == 0)
         return x;
@@ -17,41 +18,29 @@ Rcpp::NumericVector ts_slope(
         throw std::range_error("window must be a positive integer");
 
     Rcpp::NumericVector ret(x_size, fill);
+    double sum_x = 0.0;
+    double sum_i = 0.0;
+    double square_sum_i = 0.0;
+    double cross_xi = 0.0;
 
-    for (int i = window - 1; i < x_size; i++) {
-        ret[i] = 0;
-        double mean_x = 0;
-        double mean_y = double(window - 1) / 2;
-        double den = 0.0;
-        for (int j = i; j > i - window; j--) {
-            mean_x += x[j];
+    for (int i = 0; i < x_size; i++) {
+        sum_x += x[i];
+        sum_i += i;
+        square_sum_i += i * i;
+        cross_xi += x[i] * i;
+        if (i > window - 1) {
+            sum_x -= x[i - window];
+            sum_i -= i - window;
+            square_sum_i -= (i - window) * (i - window);
+            cross_xi -= x[i - window] * (i - window);
         }
-        mean_x /= window;
-        for (int j = 0; j < window; j++) {
-            ret[i] += (x[i - window + 1 + j] - mean_x) * (j - mean_y);
-            den += (j - mean_y) * (j - mean_y);
+        if (i >= window - 1) {
+            ret[i] = (cross_xi - sum_x * sum_i / window) / (square_sum_i - sum_i * sum_i / window); 
         }
-        ret[i] /= den;
-    }
-
-    if (partial == true) {
-        for (int i = least - 1; i < window - 1; i++) {
-            ret[i] = 0;
-            double mean_x = 0;
-            double mean_y = double(window - 1) / 2;
-            double den = 0.0;
-            for (int j = 0; j <= i; j++) {
-                mean_x += x[j];
-            }
-            mean_x /= (i + 1);
-            for (int j = 0; j <= i; j++) {
-                ret[i] += (x[j] - mean_x) * (j - mean_y);
-                den += (j - mean_y) * (j - mean_y);
-            }
-            ret[i] /= den;
+        else if (partial == true and i >= least - 1) {
+            ret[i] = (cross_xi - sum_x * sum_i / (i + 1)) / (square_sum_i - sum_i * sum_i / (i + 1)); 
         }
     }
-
     return ret;
 }
 // library("Rcpp")
