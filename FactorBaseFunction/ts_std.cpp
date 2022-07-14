@@ -24,14 +24,14 @@ Rcpp::NumericVector ts_std(
         sum_x += x[i];
         square_sum_x += x[i] * x[i];
         if (i > window - 1) {
-            sum_x -= x[i];
-            square_sum_x -= x[i] * x[i];
+            sum_x -= x[i - window];
+            square_sum_x -= x[i - window] * x[i - window];
         }
         if (i >= window - 1) {
             ret[i] = std::sqrt((square_sum_x - sum_x * sum_x / (window)) / (window - 1));
         }
         else if (partial == true and i >= least - 1) {
-            ret[i] = std::sqrt((square_sum_x - sum_x * sum_x / (i + 1)) / i);
+            ret[i] = std::sqrt((square_sum_x - sum_x * sum_x / (i + 1)) / (i));
         }
     }
     return ret;

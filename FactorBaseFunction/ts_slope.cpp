@@ -57,3 +57,4 @@ Rcpp::NumericVector ts_slope(
 // library("Rcpp")
 // sourceCpp("ts_slope.cpp")
 // print(ts_slope(c(1,2,3,4,6,8), 3))
+//  NA  NA 1.0 1.0 1.5 2.0
