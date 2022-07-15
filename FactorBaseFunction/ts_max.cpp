@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <set>
 
 //[[Rcpp::export]]
 Rcpp::NumericVector ts_max(
@@ -22,25 +23,24 @@ Rcpp::NumericVector ts_max(
         throw std::range_error("window must be a positive integer");
 
     Rcpp::NumericVector ret(x_size, fill);
+    std::multiset<double> s;
+    
+    for (int i = 0; i < x_size; i++) {
+        s.insert(x[i]);
 
-    for (int i = window - 1; i < x_size; i++) {
-        ret[i] = DBL_MIN;
-        for (int j = i; j > i - window; j--) {
-            ret[i] = std::max(ret[i], x[j]);
+        if (i >= window) {
+            s.erase(s.find(x[i - window]));
         }
-    }
-
-    if (partial == true) {
-        for (int i = least - 1; i < window - 1; i++) {
-            ret[i] = DBL_MIN;
-            for (int j = i; j >= 0; j--) {
-                ret[i] = std::max(ret[i], x[j]);
-            }
+        if (i >= window - 1) {
+            ret[i] = *(--s.end());
+        }
+        else if (partial == true and i >= least - 1) {
+            ret[i] = *(--s.end());
         }
     }
     return ret;
 } 
 
 // library("Rcpp")
-// sourceCpp(file="ts_min.cpp")
-// print(ts_min(1:5, 3))
+// sourceCpp(file="ts_max.cpp")
+// print(ts_max(1:5, 3))
