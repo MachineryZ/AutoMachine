@@ -15,21 +15,21 @@ Rcpp::NumericVector ts_product(
         throw std::range_error("window must be a positive integer");
     
     Rcpp::NumericVector ret(x_size, fill);
+    double product_x = 1.0;
 
-    for (int i = window - 1; i < x_size; i++) {
-        ret[i] = 1.0;
-        for (int j = i; j > i - window; j--) {
-            ret[i] *= x[j];
+    for (int i = 0; i < x_size; i++) {
+        product_x *= x[i];
+        
+        if (i >= window) {
+            product_x /= x[i - window];
         }
-    }
+        if (i >= window - 1) {
+            ret[i] = product_x;
+        }
+        else if (partial == true and i >= least - 1) {
+            ret[i] = product_x;
+        }
 
-    if (partial == true) {
-        for (int i = least - 1; i < window - 1; i++) {
-            ret[i] = 1.0;
-            for (int j = i; j >= 0; j--) {
-                ret[i] *= x[j];
-            }
-        }
     }
     return ret;
 }
