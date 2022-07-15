@@ -22,20 +22,18 @@ Rcpp::NumericVector ts_min(
         throw std::range_error("window must be a positive integer");
 
     Rcpp::NumericVector ret(x_size, fill);
-
-    for (int i = window - 1; i < x_size; i++) {
-        ret[i] = DBL_MAX;
-        for (int j = i; j > i - window; j--) {
-            ret[i] = std::min(ret[i], x[j]);
+    std::multiset<double> s;
+    
+    for (int i = 0; i < x_size; i++) {
+        s.insert(x[i]);
+        if (i >= window) {
+            s.erase(s.find(x[i - window]));
         }
-    }
-
-    if (partial == true) {
-        for (int i = least - 1; i < window - 1; i++) {
-            ret[i] = DBL_MAX;
-            for (int j = i; j >= 0; j--) {
-                ret[i] = std::min(ret[i], x[j]);
-            }
+        if (i >= window - 1) {
+            ret[i] = *(s.begin());
+        }
+        else if (partial == true and i >= least - 1) {
+            ret[i] = *(s.begin());
         }
     }
     return ret;
