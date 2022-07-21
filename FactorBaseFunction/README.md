@@ -6,6 +6,12 @@
 - ts_argmin:
 - ts_cov:
 - ts_ema:
+- ts_gte_max:
+- ts_gte_mean:
+- ts_gte_min:
+- ts_gte_sd:
+- ts_gte_sum:
+- ts_kurtosis:
 - ts_max:
 - ts_median:
 - ts_min:

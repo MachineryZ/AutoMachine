@@ -33,7 +33,7 @@ Rcpp::NumericVector ts_rank(
         throw std::range_error("window must be a positive integer");
     
     Rcpp::NumericVector ret(x_size, fill);
-
+    
     for (int i = window - 1; i < x_size; i++) {
         int greater = 0;
         int equal = 0;

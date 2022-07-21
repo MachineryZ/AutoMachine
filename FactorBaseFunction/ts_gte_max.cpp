@@ -20,10 +20,10 @@ Rcpp::NumericVector ts_gte_max(
         throw std::range_error("window must be a positive integer");
 
     double threshold = 0.0;
-    if !(method == "greater" or method == "quantile" or method == "mean")
+    if (!(method == "greater" or method == "quantile" or method == "mean"))
         throw std::range_error("input method should be in 'mean' 'greater' 'quantile");
     
-
+    
 
     Rcpp::NumericVector ret(x_size, fill);
 
