@@ -22,8 +22,17 @@ Rcpp::NumericVector ts_gte_max(
     double threshold = 0.0;
     if (!(method == "greater" or method == "quantile" or method == "mean"))
         throw std::range_error("input method should be in 'mean' 'greater' 'quantile");
-    
-    
+
+    if (method == "greater") {
+
+    }
+    else if (method == "quantile") {
+
+    }
+    else if (method == "mean") {
+        
+    }
+
 
     Rcpp::NumericVector ret(x_size, fill);
 
