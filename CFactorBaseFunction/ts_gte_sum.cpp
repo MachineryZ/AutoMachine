@@ -20,19 +20,13 @@ Rcpp::NumericVector ts_gte_sum(
     if (window <= 0)
         throw std::range_error("window must be a positive integer");
 
-    double threshold = 0.0;
     if (!(method == 1 or method == 2 or method == 3))
         throw std::range_error("input method should be in 'mean' 'greater' 'quantile");
 
-    if (method == 1) { // quantile
+    for (int i = 0; i < x_size; i++) {
         
     }
-    else if (method == 2) { // mean
 
-    }
-    else if (method == 3) { // min
-        
-    }
 
 
     Rcpp::NumericVector ret(x_size, fill);
