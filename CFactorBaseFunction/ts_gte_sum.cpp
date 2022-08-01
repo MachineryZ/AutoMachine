@@ -48,7 +48,7 @@ Rcpp::NumericVector ts_gte_sum(
                     auto it_copy = it;
                     it_copy++;
                     threshold = *it + (*it_copy - *it) * 
-                        (quantile - double(int(quantile * window))) * window;
+                        (quantile - double(int(quantile * window)));
                 }
                 ret[i] = 0.0;
                 for (int j = i - window + 1; j <= i; j++) {
@@ -59,7 +59,7 @@ Rcpp::NumericVector ts_gte_sum(
             else if (method == 2) {
                 threshold = sum / window;
                 ret[i] = 0.0;
-                for (int j = 0; j <= i; j++) {
+                for (int j = i - window + 1; j <= i; j++) {
                     ret[i] += x[j] >= threshold ? x[j] : 0.0;
                 }
                 ret[i] *= value;
@@ -83,7 +83,7 @@ Rcpp::NumericVector ts_gte_sum(
                         (quantile - double(int(quantile * (i + 1)))) * (i + 1);
                 }
                 ret[i] = 0.0;
-                for (int j = i - window + 1; j <= i; j++) {
+                for (int j = 0; j <= i; j++) {
                     ret[i] += x[j] >= threshold ? x[j] : 0.0;
                 }
                 ret[i] *= value;
