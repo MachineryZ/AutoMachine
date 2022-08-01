@@ -23,54 +23,132 @@ Rcpp::NumericVector ts_gte_sum(
         throw std::range_error("input method should be in 'mean' 'greater' 'quantile");
 
     Rcpp::NumericVector ret(x_size, fill);
+    std::set<double> s;
+    double threshold = 0.0;
+    double sum = 0.0;
 
     for (int i = 0; i < x_size; i++) {
-        double threshold = 0.0;
+        s.insert(x[i]);
+        sum += x[i];
+        if (i > window - 1) {
+            s.erase(x[i - window]);
+            sum -= x[i - window];
+        }
         if (i >= window - 1) {
             if (method == 1) { // quantile
-                for (int j = i - window + 1; j <= i; j++) {
-                    threshold += x[j];
+                int rank = int(quantile * window);
+                auto it = s.begin();
+                while(rank > 0) {
+                    it++;
+                    rank--;
                 }
-                threshold = threshold * quantile;
-            }
-            else if (method == 2) { // mean
-                for (int j = i - window + 1; j <= i; j++) {
-                    threshold += x[j];
+                if (it == --s.end())
+                    threshold = *it;
+                else {
+                    auto it_copy = it;
+                    it_copy++;
+                    threshold = *it + (*it_copy - *it) * 
+                        (quantile - double(int(quantile * window))) * window;
                 }
-                threshold /= window;
+                ret[i] = 0.0;
+                for (int j = i - window + 1; j <= i; j++) {
+                    ret[i] += x[j] >= threshold ? x[j] : 0.0;
+                }
+                ret[i] *= value;
             }
-            ret[i] = 0.0;
-            for (int j = i - window + 1; j <= i; j++) {
-                ret[i] += (x[j] >= threshold) ? x[j] : 0.0;
+            else if (method == 2) {
+                threshold = sum / window;
+                ret[i] = 0.0;
+                for (int j = 0; j <= i; j++) {
+                    ret[i] += x[j] >= threshold ? x[j] : 0.0;
+                }
+                ret[i] *= value;
             }
-            ret[i] *= value;
+            
         }
         else if (partial == true and i >= least - 1) {
             if (method == 1) { // quantile
-                for (int j = 0; j <= i; j++) {
-                    threshold += x[j];
+                int rank = int(quantile * window);
+                auto it = s.begin();
+                while(rank > 0) {
+                    it++;
+                    rank--;
                 }
-                threshold = threshold * quantile;
-            }
-            else if (method == 2) { // mean
-                for (int j = 0; j <= i; j++) {
-                    threshold += x[j];
+                if (it == --s.end())
+                    threshold = *it;
+                else {
+                    auto it_copy = it;
+                    it_copy++;
+                    threshold = *it + (*it_copy - *it) * 
+                        (quantile - double(int(quantile * (i + 1)))) * (i + 1);
                 }
-                threshold /= (i + 1);
+                ret[i] = 0.0;
+                for (int j = i - window + 1; j <= i; j++) {
+                    ret[i] += x[j] >= threshold ? x[j] : 0.0;
+                }
+                ret[i] *= value;
             }
-            ret[i] = 0.0;
-            for (int j = 0; j <= i; j++) {
-                ret[i] += (x[j] >= threshold) ? x[j] : 0.0;
+            else if (method == 2) {
+                threshold = sum / (i + 1);
+                ret[i] = 0.0;
+                for (int j = 0; j <= i; j++) {
+                    ret[i] += x[j] >= threshold ? x[j] : 0.0;
+                }
+                ret[i] *= value;
             }
-            ret[i] *= value;
         }
     }
     return ret;
+    // for (int i = 0; i < x_size; i++) {
+    //     double threshold = 0.0;
+    //     if (i >= window - 1) {
+    //         if (method == 1) { // quantile
+    //             for (int j = i - window + 1; j <= i; j++) {
+    //                 threshold += x[j];
+    //             }
+    //             threshold = threshold * quantile;
+    //         }
+    //         else if (method == 2) { // mean
+    //             for (int j = i - window + 1; j <= i; j++) {
+    //                 threshold += x[j];
+    //             }
+    //             threshold /= window;
+    //         }
+    //         ret[i] = 0.0;
+    //         for (int j = i - window + 1; j <= i; j++) {
+    //             ret[i] += (x[j] >= threshold) ? x[j] : 0.0;
+    //         }
+    //         ret[i] *= value;
+    //     }
+    //     else if (partial == true and i >= least - 1) {
+    //         if (method == 1) { // quantile
+    //             for (int j = 0; j <= i; j++) {
+    //                 threshold += x[j];
+    //             }
+    //             threshold = threshold * quantile;
+    //         }
+    //         else if (method == 2) { // mean
+    //             for (int j = 0; j <= i; j++) {
+    //                 threshold += x[j];
+    //             }
+    //             threshold /= (i + 1);
+    //         }
+    //         ret[i] = 0.0;
+    //         for (int j = 0; j <= i; j++) {
+    //             ret[i] += (x[j] >= threshold) ? x[j] : 0.0;
+    //         }
+    //         ret[i] *= value;
+    //     }
+    // }
 }
 
 /*
 library("Rcpp")
 sourceCpp(file="ts_gte_sum.cpp")
 print(ts_gte_sum(c(1,2,3,4,4), 3, TRUE, 2, method=2))
+
+library("Rcpp")
+sourceCpp(file="ts_gte_sum.cpp")
+print(ts_gte_sum(c(1,2,3,4,4), 3, TRUE, 2, method=1))
 
 */
