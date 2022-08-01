@@ -25,6 +25,7 @@ Rcpp::NumericVector ts_gte_max(
 
     if (method == "greater") {
 
+
     }
     else if (method == "quantile") {
 
