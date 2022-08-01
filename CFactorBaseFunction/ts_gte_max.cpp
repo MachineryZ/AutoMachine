@@ -3,7 +3,7 @@
 #include <bits/stdc++.h>
 
 //[[Rcpp::export]]
-Rcpp::NumericVector ts_gte_sum(
+Rcpp::NumericVector ts_gte_max(
     const Rcpp::NumericVector& x,
     const int window,
     const bool partial = false,
@@ -105,3 +105,12 @@ Rcpp::NumericVector ts_gte_sum(
     }
     return ret;
 }
+
+/*
+
+library("Rcpp")
+sourceCpp(file="ts_gte_max.cpp")
+print(ts_gte_max(c(1,2,3,4,4,2,1), 3, TRUE, 2, method=1))
+
+
+*/
