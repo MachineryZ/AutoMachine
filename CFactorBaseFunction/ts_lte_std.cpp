@@ -57,7 +57,7 @@ Rcpp::NumericVector ts_gte_sd(
                 }
                 ret[i] = 0.0;
                 for (int j = i - window + 1; j <= i; j++) {
-                    if (x[j] >= threshold) {
+                    if (x[j] <= threshold) {
                         sum += x[j];
                         square_sum += x[j] * x[j];
                         cnt++;
@@ -69,7 +69,7 @@ Rcpp::NumericVector ts_gte_sd(
                 threshold = sum / window;
                 ret[i] = 0.0;
                 for (int j = i - window + 1; j <= i; j++) {
-                    if (x[j] >= threshold) {
+                    if (x[j] <= threshold) {
                         sum += x[j];
                         square_sum += x[j] * x[j];
                         cnt++;
