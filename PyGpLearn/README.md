@@ -8,3 +8,29 @@
 5. 调用 SymbolicTransformer 的 fit 函数，开始迭代
 6. 得到最后的迭代结果
 
+SymbolicTransformer 是从 BaseSymbolic 类中派生的。BaseSymbolic 又是从 sklearn.base 的 BaseEstimator 里派生出来的
+~~~python
+class BaseEstimator:
+    @classmethod
+    def __get_param_names(cls):
+        # get parameter names for the estimator
+
+    def get_params(self, deep=True):
+
+    def set_params(self, **params):
+
+    def __repr__(self, N_CHAR_MAX=700):
+        # N_CHAR_MAX is maximum number of nonoo-blank
+        # characters to render
+    
+    def __getstate__(self):
+
+    def _more_tags(self):
+    
+    def _check_n_features__(self, X, reset):
+
+    def _validate_data(self, X, y, reset, validate_separately, **check_params):
+
+    @property
+    def_repr_html_(self):    
+~~~
