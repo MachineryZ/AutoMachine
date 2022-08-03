@@ -1,7 +1,7 @@
 import numpy as np
 from joblib import wrap_non_picklable_objects
 
-class Function(object):
+class _Function(object):
     """A representation of a mathematical relationship, a node in a program.
     This object is able to be called with NumPy vectorized arguments and return
     a resulting vector based on a mathematical relationship.
@@ -86,9 +86,9 @@ def make_function(*, function, name, arity, wrap=True):
                          'negatives in argument vectors.' % name)
 
     if wrap:
-        return Function(function=wrap_non_picklable_objects(function),
+        return _Function(function=wrap_non_picklable_objects(function),
                          name=name,
                          arity=arity)
-    return Function(function=function,
+    return _Function(function=function,
                      name=name,
                      arity=arity)
